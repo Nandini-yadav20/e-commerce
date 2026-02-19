@@ -4,6 +4,9 @@ import dotenv from "dotenv"
 import connectDB from "./config/db.js"
 import userRouter from "./routes/userRoute.js"
 import productRouter from "./routes/productRoute.js"
+import orderRouter from "./routes/orderRoutes.js"
+import cartRouter from "./routes/cartRoutes.js"
+import wishlistRouter from "./routes/wishlistRoutes.js"
 
 // app config
 dotenv.config()
@@ -13,19 +16,23 @@ connectDB()
 const app = express()
 
 // Middleware
-app.use(cors())
+app.use(cors({origin: "http://localhost:5173", 
+    credentials: true}))
 app.use(express.json())
 
 //API Endpoints
 app.use("/api/user", userRouter)
 app.use("/api/product", productRouter)
+app.use("/api/order", orderRouter)
+app.use("/api/cart", cartRouter)
+app.use("/api/wishlist", wishlistRouter)
 
 
 app.get("/", (req, res) => {
   res.send("API working")
 })
 
-// Port
+
 const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {

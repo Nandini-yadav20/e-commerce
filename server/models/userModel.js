@@ -22,21 +22,26 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
 
-    
-    cartData: {
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+     wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "product",
+      },
+    ],
+   cartData: {
       type: Object,
       default: {},
     },
   },
   {
-    minimize: false, 
+    minimize: false,
     timestamps: true,
   }
 )
 
-
-
-const userModel =
-  mongoose.models.User || mongoose.model("User", userSchema)
-
-export default userModel
+export default mongoose.models.User || mongoose.model("User", userSchema)
