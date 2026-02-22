@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import API_URL from "../config/api";
 import { toast } from "react-toastify";
 import AdminAddProduct from "../components/AdminAddProducts";
-import { FiTrash2, FiEdit2, FiImage, FiArrowUp, FiArrowDown } from "react-icons/fi";
+import {
+  FiTrash2,
+  FiImage,
+  FiSearch,
+  FiPlus,
+  FiPackage,
+  FiTrendingUp,
+  FiGrid,
+  FiDollarSign,
+} from "react-icons/fi";
+
+const API_URL = "http://localhost:5000/api";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [activeTab, setActiveTab] = useState("list");
   const [loading, setLoading] = useState(false);
-  const [sortBy, setSortBy] = useState("name");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [search, setSearch] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -18,8 +27,13 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       const res = await axios.get(`${API_URL}/product/list`);
-      setProducts(res.data.products || []);
-    } catch (err) {
+      if (res.data.success) {
+        setProducts(res.data.products || []);
+      } else {
+        toast.error(res.data.message || "Failed to load products");
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
       toast.error("Failed to load products");
     } finally {
       setLoading(false);
@@ -30,209 +44,218 @@ const AdminDashboard = () => {
     fetchProducts();
   }, []);
 
-  // ================================
-  // DELETE PRODUCT
-  // ================================
   const deleteProduct = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    if (!window.confirm("Delete this product permanently?")) return;
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${API_URL}/product/remove`,
         { id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      toast.success("Product deleted successfully");
-      fetchProducts();
-    } catch (err) {
-      toast.error("Failed to delete product");
+      if (res.data.success) {
+        toast.success("Product deleted");
+        fetchProducts();
+      } else {
+        toast.error(res.data.message || "Delete failed");
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Delete failed");
     }
   };
 
-  // ================================
-  // SORT PRODUCTS
-  // ================================
-  const getSortedProducts = () => {
-    let sorted = [...products];
-    
-    sorted.sort((a, b) => {
-      let aValue = a[sortBy];
-      let bValue = b[sortBy];
+  const filteredProducts = useMemo(() => {
+    return products.filter((p) =>
+      p.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [products, search]);
 
-      if (sortBy === "price") {
-        aValue = parseFloat(aValue) || 0;
-        bValue = parseFloat(bValue) || 0;
-      }
+  const totalValue = products.reduce(
+    (sum, p) => sum + (parseFloat(p.price) || 0),
+    0
+  );
 
-      if (typeof aValue === "string") {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      if (sortOrder === "asc") {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
-    return sorted;
-  };
-
-  // ================================
-  // UI
-  // ================================
   return (
-    <div className="space-y-6">
-      {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="space-y-8">
+
+      {/* ===== HEADER ===== */}
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900">Product Management</h1>
-          <p className="text-gray-600 mt-1">Manage and organize all your products</p>
+          <h1 className="text-4xl font-bold text-gray-900">
+            Admin Dashboard
+          </h1>
+          <p className="text-gray-500">
+            Monitor and manage your store in real time
+          </p>
+        </div>
+
+        <button
+          onClick={() => setActiveTab("add")}
+          className="flex items-center gap-2 bg-black text-white px-5 py-3 rounded-xl hover:bg-gray-800 transition"
+        >
+          <FiPlus /> Add Product
+        </button>
+      </div>
+
+      {/* ===== KPI CARDS ===== */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <StatCard
+          icon={<FiPackage />}
+          label="Total Products"
+          value={products.length}
+        />
+
+        <StatCard
+          icon={<FiDollarSign />}
+          label="Total Inventory Value"
+          value={`₹${totalValue.toLocaleString()}`}
+        />
+
+        <StatCard
+          icon={<FiTrendingUp />}
+          label="Bestsellers"
+          value={products.filter((p) => p.bestseller).length}
+        />
+
+        <StatCard
+          icon={<FiGrid />}
+          label="Categories"
+          value={[...new Set(products.map((p) => p.category))].length}
+        />
+      </div>
+
+      {/* ===== SEARCH + CONTROLS ===== */}
+      <div className="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+
+        <div className="relative w-full md:w-96">
+          <FiSearch className="absolute left-3 top-3 text-gray-400" />
+          <input
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-black outline-none"
+          />
+        </div>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setActiveTab("list")}
+            className={`px-4 py-2 rounded-lg font-medium ${
+              activeTab === "list"
+                ? "bg-black text-white"
+                : "bg-gray-100 hover:bg-gray-200"
+            }`}
+          >
+            Product List
+          </button>
+
+          <button
+            onClick={() => setActiveTab("add")}
+            className={`px-4 py-2 rounded-lg font-medium ${
+              activeTab === "add"
+                ? "bg-black text-white"
+                : "bg-gray-100 hover:bg-gray-200"
+            }`}
+          >
+            Add Product
+          </button>
         </div>
       </div>
 
-      {/* TABS */}
-      <div className="flex gap-4 border-b">
-        <button
-          onClick={() => setActiveTab("list")}
-          className={`px-6 py-3 font-medium border-b-2 transition-colors ${
-            activeTab === "list"
-              ? "border-black text-black"
-              : "border-transparent text-gray-600 hover:text-gray-900"
-          }`}
-        >
-          Product List ({products.length})
-        </button>
-        <button
-          onClick={() => setActiveTab("add")}
-          className={`px-6 py-3 font-medium border-b-2 transition-colors ${
-            activeTab === "add"
-              ? "border-black text-black"
-              : "border-transparent text-gray-600 hover:text-gray-900"
-          }`}
-        >
-          Add New Product
-        </button>
-      </div>
-
-      {/* PRODUCTS LIST TAB */}
+      {/* ===== PRODUCT LIST ===== */}
       {activeTab === "list" && (
-        <div>
-          {/* SORTING CONTROLS */}
-          <div className="bg-white rounded-lg shadow-md p-4 mb-6 flex flex-col sm:flex-row gap-4">
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">Sort by:</label>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
-              >
-                <option value="name">Name</option>
-                <option value="price">Price</option>
-                <option value="category">Category</option>
-              </select>
-            </div>
-
-            <button
-              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
-            >
-              {sortOrder === "asc" ? <FiArrowUp size={18} /> : <FiArrowDown size={18} />}
-              <span className="text-sm font-medium">
-                {sortOrder === "asc" ? "Ascending" : "Descending"}
-              </span>
-            </button>
-          </div>
-
-          {/* PRODUCTS */}
+        <>
           {loading ? (
-            <div className="flex items-center justify-center h-96">
-              <div className="text-center">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-                <p className="mt-4 text-gray-600">Loading products...</p>
-              </div>
-            </div>
-          ) : products.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <FiImage className="mx-auto text-4xl text-gray-400 mb-4" />
-              <p className="text-gray-600 text-lg">No products found</p>
-              <p className="text-gray-500 text-sm mt-2">Add your first product to get started</p>
+            <p className="text-center text-gray-500 py-20">
+              Loading products...
+            </p>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-20 text-gray-500">
+              No matching products
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {getSortedProducts().map((product) => (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+              {filteredProducts.map((product) => (
                 <div
                   key={product._id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-2xl shadow-sm border hover:shadow-lg transition overflow-hidden group"
                 >
                   {/* IMAGE */}
-                  <div className="relative h-48 bg-gray-200 overflow-hidden">
+                  <div className="h-48 bg-gray-100 overflow-hidden">
                     {product.image?.[0] ? (
                       <img
                         src={product.image[0]}
                         alt={product.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform"
+                        className="w-full h-full object-cover group-hover:scale-105 transition"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <FiImage className="text-4xl text-gray-400" />
+                      <div className="h-full flex items-center justify-center">
+                        <FiImage size={40} className="text-gray-400" />
                       </div>
                     )}
+                  </div>
 
-                    {/* BADGES */}
-                    <div className="absolute top-2 right-2 flex gap-2">
+                  {/* CONTENT */}
+                  <div className="p-4 space-y-2">
+                    <h3 className="font-semibold text-lg truncate">
+                      {product.name}
+                    </h3>
+
+                    <p className="text-sm text-gray-500">
+                      {product.category}
+                    </p>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-xl font-bold">
+                        ₹{parseFloat(product.price).toLocaleString()}
+                      </span>
+
                       {product.bestseller && (
-                        <span className="bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded">
+                        <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
                           Bestseller
                         </span>
                       )}
                     </div>
-                  </div>
 
-                  {/* CONTENT */}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg text-gray-900 truncate">
-                      {product.name}
-                    </h3>
-
-                    <p className="text-gray-500 text-sm mt-1">
-                      {product.category} • {product.subCategory}
-                    </p>
-
-                    <div className="flex items-center justify-between mt-3">
-                      <p className="text-2xl font-bold text-gray-900">
-                        ₹{parseFloat(product.price).toLocaleString()}
-                      </p>
-                    </div>
-
-                    {/* ACTIONS */}
-                    <div className="flex gap-2 mt-4">
-                      <button
-                        onClick={() => deleteProduct(product._id)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition-colors font-medium"
-                      >
-                        <FiTrash2 size={18} />
-                        Delete
-                      </button>
-                    </div>
+                    {/* ACTION */}
+                    <button
+                      onClick={() => deleteProduct(product._id)}
+                      className="w-full mt-3 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition"
+                    >
+                      <FiTrash2 /> Delete
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </>
       )}
 
-      {/* ADD PRODUCT TAB */}
+      {/* ===== ADD PRODUCT ===== */}
       {activeTab === "add" && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white p-6 rounded-2xl shadow border">
           <AdminAddProduct />
         </div>
       )}
     </div>
   );
 };
+
+const StatCard = ({ icon, label, value }) => (
+  <div className="bg-white p-6 rounded-2xl shadow-sm border flex items-center gap-4">
+    <div className="p-3 bg-black text-white rounded-lg text-xl">
+      {icon}
+    </div>
+    <div>
+      <p className="text-gray-500 text-sm">{label}</p>
+      <h3 className="text-2xl font-bold">{value}</h3>
+    </div>
+  </div>
+);
 
 export default AdminDashboard;

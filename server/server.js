@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
 import connectDB from "./config/db.js"
 import userRouter from "./routes/userRoute.js"
 import productRouter from "./routes/productRoute.js"
@@ -19,6 +20,7 @@ const app = express()
 app.use(cors({origin: "http://localhost:5173", 
     credentials: true}))
 app.use(express.json())
+app.use(cookieParser())
 
 //API Endpoints
 app.use("/api/user", userRouter)

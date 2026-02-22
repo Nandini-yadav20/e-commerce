@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import API_URL from "../config/api";
 import { toast } from "react-toastify";
 import { IoClose } from "react-icons/io5";
+
+const API_URL = "http://localhost:5000/api";
 
 const AdminAddProduct = () => {
   const [product, setProduct] = useState({

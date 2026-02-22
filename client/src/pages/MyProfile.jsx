@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../config/axiosConfig";
 import { ShopContext } from "../context/ShopContext";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currency } = useContext(ShopContext);
-
+ const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
-  const [activeTab, setActiveTab] = useState("orders");
+  const [activeTab, setActiveTab] = useState("orders")
 
   const token = localStorage.getItem("token");
 
@@ -16,7 +17,7 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/users/profile",
+          "http://localhost:5000/api/user/profile",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -33,14 +34,14 @@ const Profile = () => {
     };
 
     if (token) fetchUser();
-  }, []);
+  }, [token]);
 
   // ================= FETCH USER ORDERS =================
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:4000/api/orders/user",
+          "http://localhost:5000/api/order/user-order",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -57,7 +58,7 @@ const Profile = () => {
     };
 
     if (token) fetchOrders();
-  }, []);
+  }, [token]);
 
   if (!user) {
     return (

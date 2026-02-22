@@ -3,7 +3,15 @@ import { Navigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 
 const ProtectedRoute = ({ children, requiredRole = null }) => {
-  const { user, token } = useContext(ShopContext);
+  const { user, token, isContextReady } = useContext(ShopContext);
+
+  if (!isContextReady) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg text-gray-600">Loading...</p>
+      </div>
+    );
+  }
 
   // If no token, redirect to login
   if (!token) {

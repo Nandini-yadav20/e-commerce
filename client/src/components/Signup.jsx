@@ -1,13 +1,15 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import API_URL from "../config/api";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 
+const API_URL = "http://localhost:5000/api";
+
 const Signup = () => {
   const navigate = useNavigate();
   const { setToken, setUser } = useContext(ShopContext);
+  axios.defaults.withCredentials = true;
 
   const [data, setData] = useState({
     name: "",
@@ -38,9 +40,9 @@ const Signup = () => {
 
         toast.success("Account created successfully 🎉");
 
-        // Redirect admin to add products page, user to home
+        // Redirect admin to dashboard, user to home
         if (res.data.user.role === "admin") {
-          navigate("/admin/adminDashboard");
+          navigate("/admin/dashboard");
         } else {
           navigate("/");
         }

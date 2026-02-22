@@ -17,7 +17,8 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
-  const [wishlist, setWishlist] = useState([])
+  const [wishlist, setWishlist] = useState([]);
+  const [isContextReady, setIsContextReady] = useState(false);
 
   // Initialize token and user from localStorage and fetch products on component mount
   useEffect(() => {
@@ -38,6 +39,9 @@ const ShopContextProvider = (props) => {
     
     // Fetch products from backend
     fetchProducts();
+    
+    // Mark context as ready after initialization
+    setIsContextReady(true);
   }, []);
 
   // Load cart from backend when token changes
@@ -220,7 +224,8 @@ const ShopContextProvider = (props) => {
     API_URL,
     wishlist,
     addToWishlist,
-    removeFromWishlist
+    removeFromWishlist,
+    isContextReady
   };
 
   return (

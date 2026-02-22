@@ -14,7 +14,7 @@ const upload = multer({
       callback(new Error("Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed."));
     }
   },
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 export default upload; 

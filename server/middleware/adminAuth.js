@@ -3,23 +3,29 @@ import userModel from "../models/userModel.js"
 
 const adminAuth = async (req, res, next) => {
   try {
+    let token;
+
+    // 1️⃣ Check Authorization header
     const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
+    if (authHeader?.startsWith("Bearer ")) {
+      token = authHeader.slice(7);
+    }
+
+    // 2️⃣ Check cookie if header not present
+    if (!token && req.cookies?.token) {
+      token = req.cookies.token;
+    }
+
+    if (!token) {
       return res.status(401).json({
         success: false,
         message: "Not authorized, login again",
       });
     }
 
-    // Extract token from "Bearer <token>" format
-    const token = authHeader.startsWith("Bearer ")
-      ? authHeader.slice(7)
-      : authHeader;
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 🔍 Fetch user from DB
     const user = await userModel.findById(decoded.id);
 
     if (!user || user.role !== "admin") {
@@ -29,16 +35,16 @@ const adminAuth = async (req, res, next) => {
       });
     }
 
-    req.user = user; // optional
+    req.user = user;
     next();
 
   } catch (error) {
     console.log(error);
     res.status(401).json({
       success: false,
-      message: error.message,
+      message: "Invalid or expired token",
     });
   }
 };
 
-export default adminAuth
+export default adminAuth;

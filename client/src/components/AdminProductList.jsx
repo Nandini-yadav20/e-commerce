@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../config/axiosConfig"
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
@@ -8,7 +8,7 @@ const AdminProductList = () => {
 
   const fetchProducts = async () => {
     const res = await axios.get(
-      "http://localhost:4000/api/product/list"
+      "http://localhost:5000/api/product/list"
     );
 
     setProducts(res.data.products);
@@ -16,7 +16,7 @@ const AdminProductList = () => {
 
   const deleteProduct = async (id) => {
     await axios.post(
-      "http://localhost:4000/api/product/delete",
+      "http://localhost:5000/api/product/delete",
       { id },
       { headers: { token } }
     );
@@ -26,7 +26,7 @@ const AdminProductList = () => {
 
   const toggleProduct = async (id) => {
     await axios.post(
-      "http://localhost:4000/api/product/toggle",
+      "http://localhost:5000/api/product/toggle",
       { id },
       { headers: { token } }
     );

@@ -2,9 +2,10 @@ import React from "react"
 import { Routes, Route } from "react-router-dom"
 
 import Navbar from "./components/Navbar"
-import AdminAddProducts from "./components/AdminAddProducts"
+
 import AdminLayout from "./components/AdminLayout"
 import ProtectedRoute from "./components/ProtectedRoute"
+import axios from "axios"
 
 // Pages
 import Home from "./pages/Home"
@@ -25,8 +26,9 @@ import Signup from "./components/Signup"
 import { ToastContainer } from "react-toastify";
 import PlaceOrder from "./pages/PlaceOrder"
 
-
+axios.defaults.withCredentials = true;
 const App = () => {
+  
   return (
     <div>
       {/* Navbar visible on all pages */}

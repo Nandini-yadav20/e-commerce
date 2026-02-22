@@ -1,13 +1,15 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import API_URL from "../config/api";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 
+const API_URL = "http://localhost:5000/api";
+
 const Login = () => {
   const navigate = useNavigate();
   const { setToken, setUser } = useContext(ShopContext);
+  axios.defaults.withCredentials = true;
 
   const [data, setData] = useState({
     email: "",
@@ -35,8 +37,6 @@ const Login = () => {
         setUser(res.data.user);
 
         toast.success("Login successful 🎉");
-         // ✅ success notification
-      
 
         // Redirect admin to admin dashboard, user to home
         if (res.data.user.role === "admin") {
