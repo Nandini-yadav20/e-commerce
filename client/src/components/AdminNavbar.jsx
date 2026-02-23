@@ -18,12 +18,16 @@ const AdminNavbar = () => {
     navigate("/login");
   };
 
-  const adminNavItems = [
-    { label: "Dashboard", path: "/admin/dashboard" },
-    { label: "Products", path: "/admin/products" },
-    { label: "Orders", path: "/admin/orders" },
-    { label: "Users", path: "/admin/users" },
-  ];
+
+  // Only show admin nav if user is admin
+  const adminNavItems = user?.role === "admin"
+    ? [
+        { label: "Dashboard", path: "/admin/dashboard" },
+        { label: "Products", path: "/admin/products" },
+        { label: "Orders", path: "/admin/orders" },
+        { label: "Users", path: "/admin/users" },
+      ]
+    : [];
 
   return (
     <nav className="w-full bg-gradient-to-r from-gray-900 to-black text-white shadow-lg sticky top-0 z-50">

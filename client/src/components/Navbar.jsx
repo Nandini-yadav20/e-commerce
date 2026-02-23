@@ -92,6 +92,41 @@ const Navbar = () => {
                         <p className="text-xs text-[#8B7B6C]">{user.email}</p>
                       </div>
 
+                      {/* ADMIN LINKS */}
+                      {user.role === "admin" && (
+                        <>
+                          <Link
+                            to="/admin/dashboard"
+                            onClick={() => setProfileOpen(false)}
+                            className="block px-4 py-2 hover:bg-[#F5EFE7] font-bold text-[#C76B50]"
+                          >
+                            Admin Dashboard
+                          </Link>
+                          <Link
+                            to="/admin/products"
+                            onClick={() => setProfileOpen(false)}
+                            className="block px-4 py-2 hover:bg-[#F5EFE7]"
+                          >
+                            Manage Products
+                          </Link>
+                          <Link
+                            to="/admin/orders"
+                            onClick={() => setProfileOpen(false)}
+                            className="block px-4 py-2 hover:bg-[#F5EFE7]"
+                          >
+                            Manage Orders
+                          </Link>
+                          <Link
+                            to="/admin/users"
+                            onClick={() => setProfileOpen(false)}
+                            className="block px-4 py-2 hover:bg-[#F5EFE7]"
+                          >
+                            Manage Users
+                          </Link>
+                          <div className="border-t my-1" />
+                        </>
+                      )}
+
                       {/* USER LINKS */}
                       <Link
                         to="/myProfile"

@@ -508,7 +508,11 @@ const Collection = () => {
     removeFromWishlist,
   } = useContext(ShopContext);
 
-  const [category, setCategory] = useState("All");
+  // Read category from query string
+  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const initialCategory = searchParams && searchParams.get("category") ? searchParams.get("category") : "All";
+
+  const [category, setCategory] = useState(initialCategory);
   const [subCategory, setSubCategory] = useState("All");
   const [sortOption, setSortOption] = useState("");
   const [priceRange, setPriceRange] = useState(50000);
