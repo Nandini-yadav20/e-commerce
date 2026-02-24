@@ -386,8 +386,8 @@ const Profile = () => {
 
         const config = { headers: { Authorization: `Bearer ${authToken}` } };
 
-        const profileRes = await axios.get("https://e-commerce-qdh9.onrender.com/user/profile", config);
-        const ordersRes  = await axios.get("https://e-commerce-qdh9.onrender.com/order/user-orders", config);
+        const profileRes = await axios.get("https://e-commerce-qdh9.onrender.com/api/user/profile", config);
+        const ordersRes  = await axios.get("https://e-commerce-qdh9.onrender.com/api/order/user-orders", config);
 
         if (profileRes.data.success) setUser(profileRes.data.user);
         if (ordersRes.data.success)  setOrders(ordersRes.data.orders);

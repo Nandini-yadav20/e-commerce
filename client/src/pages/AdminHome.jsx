@@ -10,7 +10,7 @@ import {
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-const API_URL = "https://e-commerce-qdh9.onrender.com";
+const API_URL = "https://e-commerce-qdh9.onrender.com/api";
 
 const AdminHome = () => {
   const [stats, setStats] = useState({

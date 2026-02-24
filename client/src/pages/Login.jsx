@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 
-const API_URL = "https://e-commerce-qdh9.onrender.com";
+const API_URL = "https://e-commerce-qdh9.onrender.com/api";
 
 const Login = () => {
   const navigate = useNavigate();

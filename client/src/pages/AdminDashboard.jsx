@@ -13,7 +13,7 @@ import {
   FiDollarSign,
 } from "react-icons/fi";
 
-const API_URL = "https://e-commerce-qdh9.onrender.com";
+const API_URL = "https://e-commerce-qdh9.onrender.com/api";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);

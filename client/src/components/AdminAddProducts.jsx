@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { IoClose } from "react-icons/io5";
 
-const API_URL = "https://e-commerce-qdh9.onrender.com";
+const API_URL = "https://e-commerce-qdh9.onrender.com/api";
 
 const AdminAddProduct = () => {
   const [product, setProduct] = useState({

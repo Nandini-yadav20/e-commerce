@@ -8,7 +8,7 @@ const AdminProductList = () => {
 
   const fetchProducts = async () => {
     const res = await axios.get(
-      "https://e-commerce-qdh9.onrender.com/product/list"
+      "https://e-commerce-qdh9.onrender.com/api/product/list"
     );
 
     setProducts(res.data.products);
@@ -16,7 +16,7 @@ const AdminProductList = () => {
 
   const deleteProduct = async (id) => {
     await axios.post(
-      "https://e-commerce-qdh9.onrender.com/product/delete",
+      "https://e-commerce-qdh9.onrender.com/api/product/delete",
       { id },
       { headers: { token } }
     );
@@ -26,7 +26,7 @@ const AdminProductList = () => {
 
   const toggleProduct = async (id) => {
     await axios.post(
-      "https://e-commerce-qdh9.onrender.com/product/toggle",
+      "https://e-commerce-qdh9.onrender.com/api/product/toggle",
       { id },
       { headers: { token } }
     );

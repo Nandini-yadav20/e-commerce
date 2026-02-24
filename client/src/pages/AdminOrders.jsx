@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FiFilter, FiCheckCircle, FiClock, FiXCircle } from "react-icons/fi";
 
-const API_URL = "https://e-commerce-qdh9.onrender.com";
+const API_URL = "https://e-commerce-qdh9.onrender.com/api";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
