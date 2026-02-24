@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "http://:5000/api";
 
 const Signup = () => {
   const navigate = useNavigate();

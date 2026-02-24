@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const ShopContext = createContext();
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://e-commerce-qdh9.onrender.com";
 
 const ShopContextProvider = (props) => {
 

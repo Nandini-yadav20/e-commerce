@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api"; 
+const API_URL = "https://e-commerce-qdh9.onrender.com"; 
 
 
 export default API_URL;
