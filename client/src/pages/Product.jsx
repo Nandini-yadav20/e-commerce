@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import api from "../config/axiosConfig";
+import api from "../config/axiosconfig";
 import { toast } from "react-toastify";
 
 const STYLES = `

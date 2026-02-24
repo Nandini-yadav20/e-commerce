@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../config/axiosConfig"
+import api from "../config/axiosconfig"
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
