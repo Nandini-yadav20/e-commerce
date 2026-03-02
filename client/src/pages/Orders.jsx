@@ -81,9 +81,18 @@ const Orders = () => {
                 <p className="text-gray-500">{order._id}</p>
               </div>
 
-              <div className="text-right">
+              <div className="text-center">
                 <p className="font-semibold">Status:</p>
                 <p className="text-green-600">{order.status || "Processing"}</p>
+              </div>
+
+              <div className="text-right">
+                <p className="font-semibold">Payment:</p>
+                <p className="text-gray-600">
+                  {order.paymentMethod === "cash_on_delivery" 
+                    ? "💵 COD" 
+                    : "📱 UPI"}
+                </p>
               </div>
             </div>
 

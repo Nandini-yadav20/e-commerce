@@ -6,7 +6,7 @@ import orderModel from "../models/ordermodel.js";
 // ============================
 const placeOrder = async (req, res) => {
   try {
-    const { items, amount, address } = req.body;
+    const { items, amount, address, paymentMethod } = req.body;
 
     if (!items || items.length === 0) {
       return res.json({ success: false, message: "No items in order" });
@@ -22,6 +22,8 @@ const placeOrder = async (req, res) => {
       amount,
       address,
       status: "Processing",
+      paymentMethod: paymentMethod || "cash_on_delivery",
+      paymentStatus: paymentMethod === "upi" ? "pending" : "pending",
     });
 
     await newOrder.save();

@@ -18,6 +18,7 @@ const PlaceOrder = () => {
   } = useContext(ShopContext);
 
   const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("cash_on_delivery");
 
   const [address, setAddress] = useState({
     name: "",
@@ -74,9 +75,11 @@ const PlaceOrder = () => {
     try {
       setLoading(true);
 
+      console.log("Submitting order with:", { paymentMethod, items: cartData.length, total });
+
       const response = await axios.post(
         `${API_URL}/order/place`,
-        { items: cartData, amount: total, address },
+        { items: cartData, amount: total, address, paymentMethod },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -119,74 +122,128 @@ const PlaceOrder = () => {
         {/* GRID FIXED HERE */}
         <div className="grid lg:grid-cols-3 gap-8">
 
-          {/* LEFT — ADDRESS */}
-          <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
+          {/* LEFT COLUMN — ADDRESS & PAYMENT */}
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* SHIPPING ADDRESS */}
+            <div className="bg-white p-6 rounded-2xl shadow-lg">
 
-            <h2 className="text-xl font-semibold mb-6">
-              Shipping Address
-            </h2>
+              <h2 className="text-xl font-semibold mb-6">
+                Shipping Address
+              </h2>
 
-            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 gap-4">
 
-              <input
-                name="name"
-                placeholder="Full Name"
-                onChange={handleChange}
-                required
-                className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
-              />
+                <input
+                  name="name"
+                  placeholder="Full Name"
+                  onChange={handleChange}
+                  required
+                  className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
+                />
 
-              <input
-                name="phone"
-                placeholder="Phone Number"
-                onChange={handleChange}
-                required
-                className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
-              />
+                <input
+                  name="phone"
+                  placeholder="Phone Number"
+                  onChange={handleChange}
+                  required
+                  className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
+                />
 
-              <input
-                name="street"
-                placeholder="Street Address"
-                onChange={handleChange}
-                required
-                className="border p-3 rounded-lg sm:col-span-2 focus:ring-2 focus:ring-black outline-none"
-              />
+                <input
+                  name="street"
+                  placeholder="Street Address"
+                  onChange={handleChange}
+                  required
+                  className="border p-3 rounded-lg sm:col-span-2 focus:ring-2 focus:ring-black outline-none"
+                />
 
-              <input
-                name="city"
-                placeholder="City"
-                onChange={handleChange}
-                required
-                className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
-              />
+                <input
+                  name="city"
+                  placeholder="City"
+                  onChange={handleChange}
+                  required
+                  className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
+                />
 
-              <input
-                name="state"
-                placeholder="State"
-                onChange={handleChange}
-                required
-                className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
-              />
+                <input
+                  name="state"
+                  placeholder="State"
+                  onChange={handleChange}
+                  required
+                  className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
+                />
 
-              <input
-                name="pincode"
-                placeholder="Pincode"
-                onChange={handleChange}
-                required
-                className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
-              />
+                <input
+                  name="pincode"
+                  placeholder="Pincode"
+                  onChange={handleChange}
+                  required
+                  className="border p-3 rounded-lg focus:ring-2 focus:ring-black outline-none"
+                />
 
-              <input
-                name="country"
-                value="India"
-                readOnly
-                className="border p-3 rounded-lg bg-gray-100"
-              />
+                <input
+                  name="country"
+                  value="India"
+                  readOnly
+                  className="border p-3 rounded-lg bg-gray-100"
+                />
+              </div>
             </div>
+
+            {/* PAYMENT METHOD */}
+            <div className="bg-white p-6 rounded-2xl shadow-lg">
+
+              <h2 className="text-xl font-semibold mb-6">
+                Payment Method
+              </h2>
+
+              <div className="space-y-3">
+                {/* Cash on Delivery */}
+                <div 
+                  className="flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-black transition"
+                  style={{ borderColor: paymentMethod === 'cash_on_delivery' ? '#000' : '#e5e7eb' }}
+                  onClick={() => setPaymentMethod('cash_on_delivery')}
+                >
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="cash_on_delivery"
+                    checked={paymentMethod === "cash_on_delivery"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-5 h-5 cursor-pointer"
+                  />
+                  <div className="ml-4 flex-1">
+                    <p className="font-semibold text-lg">💵 Cash on Delivery</p>
+                    <p className="text-sm text-gray-500">Pay when you receive your order</p>
+                  </div>
+                </div>
+
+                {/* UPI */}
+                <div 
+                  className="flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-black transition"
+                  style={{ borderColor: paymentMethod === 'upi' ? '#000' : '#e5e7eb' }}
+                  onClick={() => setPaymentMethod('upi')}
+                >
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="upi"
+                    checked={paymentMethod === "upi"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-5 h-5 cursor-pointer"
+                  />
+                  <div className="ml-4 flex-1">
+                    <p className="font-semibold text-lg">📱 UPI Payment</p>
+                    <p className="text-sm text-gray-500">Pay securely using UPI services</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
-
-          {/* RIGHT — ORDER SUMMARY */}
+          {/* RIGHT COLUMN — ORDER SUMMARY */}
           <div className="bg-white p-6 rounded-2xl shadow-lg h-fit sticky top-6">
 
             <h2 className="text-xl font-semibold mb-4">
@@ -236,6 +293,16 @@ const PlaceOrder = () => {
                 <span>Total</span>
                 <span>{currency}{total}</span>
               </div>
+            </div>
+
+            {/* Payment Method Summary */}
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-600 mb-2">Payment Method:</p>
+              <p className="font-semibold">
+                {paymentMethod === "cash_on_delivery" 
+                  ? "💵 Cash on Delivery" 
+                  : "📱 UPI Payment"}
+              </p>
             </div>
 
             <button

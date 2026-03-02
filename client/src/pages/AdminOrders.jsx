@@ -230,6 +230,12 @@ const AdminOrders = () => {
 
                     <div>
                       <h4 className="font-semibold mb-2">Order Summary</h4>
+                      <p className="text-sm mb-3">
+                        <strong>Payment:</strong>{" "}
+                        {order.paymentMethod === "cash_on_delivery" 
+                          ? "💵 Cash on Delivery" 
+                          : "📱 UPI"}
+                      </p>
                       <p>Subtotal: ₹{order.amount}</p>
                       <p>Tax (18%): ₹{(order.amount * 0.18).toFixed(2)}</p>
                       <p>Shipping: ₹10</p>

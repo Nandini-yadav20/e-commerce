@@ -32,6 +32,18 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "Processing",
     },
+
+    paymentMethod: {
+      type: String,
+      enum: ["cash_on_delivery", "upi"],
+      default: "cash_on_delivery",
+    },
+
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "completed", "failed"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
