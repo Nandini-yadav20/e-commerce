@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
-import Title from "./Title";
 import ProductItem from "./ProductItem";
 import SearchBar from "./SearchBar";
 
@@ -11,11 +10,11 @@ const NewCollection = () => {
 
   useEffect(() => {
     if (products && products.length > 0) {
+      // ✅ FIX: Show ALL latest products, not just bestsellers
       setLatestProducts(products.slice(0, 10));
     }
   }, [products]);
 
-  // Trigger fade-in on mount
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(t);
@@ -33,7 +32,6 @@ const NewCollection = () => {
           overflow: hidden;
         }
 
-        /* Subtle grain texture overlay */
         .nc-section::before {
           content: '';
           position: absolute;
@@ -51,7 +49,6 @@ const NewCollection = () => {
           margin: 0 auto;
         }
 
-        /* ── Header ── */
         .nc-header {
           text-align: center;
           margin-bottom: 3.5rem;
@@ -93,9 +90,7 @@ const NewCollection = () => {
           margin: 0 0 1rem;
           line-height: 1.15;
         }
-        .nc-title span {
-          color: #8B5E3C;
-        }
+        .nc-title span { color: #8B5E3C; }
 
         .nc-desc {
           font-family: 'DM Sans', sans-serif;
@@ -106,14 +101,12 @@ const NewCollection = () => {
           line-height: 1.7;
         }
 
-        /* Search wrapper */
         .nc-search-wrap {
           display: flex;
           justify-content: center;
           margin-bottom: 0.5rem;
         }
 
-        /* ── Divider ── */
         .nc-divider {
           display: flex;
           align-items: center;
@@ -134,7 +127,6 @@ const NewCollection = () => {
           flex-shrink: 0;
         }
 
-        /* ── Product Grid ── */
         .nc-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -144,7 +136,6 @@ const NewCollection = () => {
         @media (min-width: 768px)  { .nc-grid { grid-template-columns: repeat(4, 1fr); } }
         @media (min-width: 1024px) { .nc-grid { grid-template-columns: repeat(5, 1fr); } }
 
-        /* Staggered card fade-in */
         .nc-card-wrap {
           opacity: 0;
           transform: translateY(20px);
@@ -155,7 +146,6 @@ const NewCollection = () => {
           transform: translateY(0);
         }
 
-        /* ── View All CTA ── */
         .nc-cta-wrap {
           display: flex;
           justify-content: center;
@@ -163,9 +153,8 @@ const NewCollection = () => {
           opacity: 0;
           transition: opacity 0.6s ease 0.4s;
         }
-        .nc-cta-wrap.visible {
-          opacity: 1;
-        }
+        .nc-cta-wrap.visible { opacity: 1; }
+
         .nc-cta {
           display: inline-flex;
           align-items: center;
@@ -194,49 +183,21 @@ const NewCollection = () => {
           transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           z-index: 0;
         }
-        .nc-cta:hover::before {
-          transform: scaleX(1);
-        }
-        .nc-cta:hover {
-          color: #F5EFE7;
-        }
-        .nc-cta span {
-          position: relative;
-          z-index: 1;
-        }
+        .nc-cta:hover::before { transform: scaleX(1); }
+        .nc-cta:hover { color: #F5EFE7; }
+        .nc-cta span { position: relative; z-index: 1; }
         .nc-cta-arrow {
           position: relative;
           z-index: 1;
           display: inline-block;
           transition: transform 0.3s ease;
         }
-        .nc-cta:hover .nc-cta-arrow {
-          transform: translateX(5px);
-        }
-
-        /* Count badge */
-        .nc-count {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          background: #8B5E3C;
-          color: #F5EFE7;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.62rem;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          margin-left: 0.25rem;
-          vertical-align: middle;
-        }
+        .nc-cta:hover .nc-cta-arrow { transform: translateX(5px); }
       `}</style>
 
       <section className="nc-section">
         <div className="nc-inner">
 
-          {/* ── Header ── */}
           <div className={`nc-header ${visible ? "visible" : ""}`}>
             <div className="nc-eyebrow">
               <span className="nc-eyebrow-line" />
@@ -253,13 +214,11 @@ const NewCollection = () => {
               elegance, and everyday confidence.
             </p>
 
-            {/* SearchBar */}
             <div className="nc-search-wrap">
               <SearchBar />
             </div>
           </div>
 
-          {/* Ornamental divider */}
           <div className="nc-divider">
             <span className="nc-divider-line" />
             <span className="nc-divider-diamond" />
@@ -267,24 +226,29 @@ const NewCollection = () => {
           </div>
 
           {/* ── Product Grid ── */}
-          <div className="nc-grid">
-            {latestProducts.map((item, i) => (
-              <div
-                key={item._id}
-                className={`nc-card-wrap ${visible ? "visible" : ""}`}
-                style={{ transitionDelay: `${0.05 + i * 0.06}s` }}
-              >
-                <ProductItem
-                  id={item._id}
-                  image={item.image}
-                  name={item.name}
-                  price={item.price}
-                />
-              </div>
-            ))}
-          </div>
+          {latestProducts.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#8B5E3C", fontFamily: "DM Sans", padding: "2rem" }}>
+              Loading products...
+            </p>
+          ) : (
+            <div className="nc-grid">
+              {latestProducts.map((item, i) => (
+                <div
+                  key={item._id}
+                  className={`nc-card-wrap ${visible ? "visible" : ""}`}
+                  style={{ transitionDelay: `${0.05 + i * 0.06}s` }}
+                >
+                  <ProductItem
+                    id={item._id}
+                    image={item.image}
+                    name={item.name}
+                    price={item.price}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
-          {/* ── View All CTA ── */}
           <div className={`nc-cta-wrap ${visible ? "visible" : ""}`}>
             <a href="/collection" className="nc-cta">
               <span>View All Arrivals</span>

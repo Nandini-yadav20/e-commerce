@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 
-const ProductItem = ({ id, image, name, price }) => {
+const ProductItem = ({ id, image, name, price, bestseller }) => {
   const { currency, wishlist, addToWishlist, removeFromWishlist, token } = useContext(ShopContext);
 
   const images = Array.isArray(image) ? image : [image];
@@ -134,6 +134,24 @@ const ProductItem = ({ id, image, name, price }) => {
           transform: translateY(0);
         }
 
+        /* Bestseller badge */
+        .bestseller-badge {
+          position: absolute;
+          top: 12px;
+          right: 50px;
+          background: linear-gradient(135deg, #D4AF37, #E8C547);
+          color: #1a1a1a;
+          font-size: 9px;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          font-weight: 700;
+          padding: 5px 10px;
+          backdrop-filter: blur(6px);
+          opacity: 1;
+          transform: translateY(0);
+          box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+
         /* Product info */
         .product-info {
           padding: 12px 0 6px;
@@ -212,6 +230,11 @@ const ProductItem = ({ id, image, name, price }) => {
           {/* Photo count tag */}
           {hasMultiple && (
             <span className="quick-tag">{images.length} photos</span>
+          )}
+
+          {/* Bestseller badge */}
+          {bestseller && (
+            <span className="bestseller-badge">⭐ Bestseller</span>
           )}
 
           {/* Dot indicators */}

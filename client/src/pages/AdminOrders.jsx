@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FiFilter, FiCheckCircle, FiClock, FiXCircle } from "react-icons/fi";
-
-const API_URL = "https://e-commerce-qdh9.onrender.com/api";
+import API_URL from "../config/api";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);

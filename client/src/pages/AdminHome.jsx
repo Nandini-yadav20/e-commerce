@@ -9,8 +9,7 @@ import {
   FiArrowRight,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
-
-const API_URL = "https://e-commerce-qdh9.onrender.com/api";
+import API_URL from "../config/api";
 
 const AdminHome = () => {
   const [stats, setStats] = useState({

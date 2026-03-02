@@ -719,7 +719,7 @@ const Collection = () => {
                     {/* Wishlist */}
                     <button
                       className={`col-wish-btn ${isInWishlist(item._id) ? "wishlisted" : ""}`}
-                      onClick={() => isInWishlist(item._id) ? removeFromWishlist(item._id) : addToWishlist(item)}
+                      onClick={() => isInWishlist(item._id) ? removeFromWishlist(item._id) : addToWishlist(item._id)}
                     >
                       {isInWishlist(item._id) ? "♥" : "♡"}
                     </button>
@@ -727,7 +727,7 @@ const Collection = () => {
                     {/* Image */}
                     <Link to={`/product/${item._id}`}>
                       <img
-                        src={item.image}
+                        src={Array.isArray(item.image) ? item.image[0] : item.image}
                         alt={item.name}
                         className="col-card-img"
                         loading="lazy"

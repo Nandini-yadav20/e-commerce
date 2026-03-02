@@ -438,7 +438,7 @@ const Product = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await api.get(`${API_URL}/product/single/${id}`);
+      const response = await api.get(`/product/single/${id}`);
       if (response.data.success) {
         setProductData(response.data.product);
         setImage(

@@ -367,7 +367,7 @@ const STYLES = `
 `;
 
 const Profile = () => {
-  const { currency, wishlist, removeFromWishlist, addToCart, token, isContextReady } = useContext(ShopContext);
+  const { currency, wishlist, removeFromWishlist, addToCart, token, isContextReady, API_URL } = useContext(ShopContext);
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -386,8 +386,8 @@ const Profile = () => {
 
         const config = { headers: { Authorization: `Bearer ${authToken}` } };
 
-        const profileRes = await axios.get("https://e-commerce-qdh9.onrender.com/api/user/profile", config);
-        const ordersRes  = await axios.get("https://e-commerce-qdh9.onrender.com/api/order/user-orders", config);
+        const profileRes = await axios.get(`${API_URL}/user/profile`, config);
+        const ordersRes  = await axios.get(`${API_URL}/order/user-orders`, config);
 
         if (profileRes.data.success) setUser(profileRes.data.user);
         if (ordersRes.data.success)  setOrders(ordersRes.data.orders);

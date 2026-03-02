@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import api from "../config/axiosconfig"
+import axios from "axios";
+import API_URL from "../config/api";
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ const AdminProductList = () => {
 
   const fetchProducts = async () => {
     const res = await axios.get(
-      "https://e-commerce-qdh9.onrender.com/api/product/list"
+      `${API_URL}/product/list`
     );
 
     setProducts(res.data.products);
@@ -16,9 +17,9 @@ const AdminProductList = () => {
 
   const deleteProduct = async (id) => {
     await axios.post(
-      "https://e-commerce-qdh9.onrender.com/api/product/delete",
+      `${API_URL}/product/delete`,
       { id },
-      { headers: { token } }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
     fetchProducts();
@@ -26,9 +27,9 @@ const AdminProductList = () => {
 
   const toggleProduct = async (id) => {
     await axios.post(
-      "https://e-commerce-qdh9.onrender.com/api/product/toggle",
+      `${API_URL}/product/toggle`,
       { id },
-      { headers: { token } }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
     fetchProducts();

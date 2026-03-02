@@ -12,8 +12,7 @@ import {
   FiGrid,
   FiDollarSign,
 } from "react-icons/fi";
-
-const API_URL = "https://e-commerce-qdh9.onrender.com/api";
+import API_URL from "../config/api";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
