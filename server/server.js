@@ -17,7 +17,7 @@ connectDB()
 const app = express()
 
 // Middleware
-app.use(cors({origin: ["https://e-commerce-55mm.vercel.app", "http://localhost:5173"], 
+app.use(cors({origin: ["https://e-commerce-tau-ruby-53.vercel.app", "http://localhost:5173"], 
     credentials: true}))
 app.use(express.json())
 app.use(cookieParser())
